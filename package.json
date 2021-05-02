@@ -1,0 +1,23 @@
+{
+  "name": "resource-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./bin/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "resource-manager": "./bin/index.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "faker": "^5.5.2",
+    "openstack-cli": "^1.0.5",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "sqlite3": "^5.0.2",
+    "yargs": "^16.2.0"
+  }
+}
