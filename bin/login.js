@@ -1,6 +1,7 @@
 const config = require("../config/default.json");
 const tokenService = require("./token-service");
 const rp = require("request-promise")
+
 module.exports = async ({username, password, domain}) => {
     try{
         let session_in4 = await tokenService.getToken();

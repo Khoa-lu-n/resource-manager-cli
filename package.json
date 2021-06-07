@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.1",
+    "console-table-printer": "^2.9.0",
     "faker": "^5.5.2",
     "openstack-cli": "^1.0.5",
     "request": "^2.88.2",

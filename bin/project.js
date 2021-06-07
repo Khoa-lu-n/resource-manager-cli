@@ -2,6 +2,7 @@ const tokenService = require("./token-service");
 const rp = require("request-promise");
 const config = require("../config/default.json");
 const chalk = require("chalk");
+const {Table} = require("console-table-printer");
 
 module.exports.showDetail = async () => {
     try{
@@ -32,13 +33,48 @@ module.exports.showDetail = async () => {
                 const percent_cpu = parseInt(resource.used_cpu * 100 /resource.total_cpu)
                 const percent_memory = parseInt(resource.used_memory * 100 /resource.total_memory)
                 const percent_disk = parseInt(resource.used_disk * 100 /resource.total_disk)
-                console.log(chalk.blueBright("Resource overview: "));
-                console.log(`${chalk.yellow("CPU     :")}` + `    Used ${percent_cpu}%          Free: ${resource.total_cpu - resource.used_cpu} `)
-                console.log(`${chalk.green("Memory  :")}` + `    Used ${percent_memory}%          Free: ${resource.total_memory - resource.used_memory} MB`)
-                console.log(`${chalk.red("Disk    :")}` + `    Used ${percent_disk}%          Free: ${resource.total_disk - resource.used_disk} GB`)
+                console.log(chalk.greenBright("Resource overview: "));
+                let resource_table = new Table({
+                    columns: [
+                        {alignment: "left", name: "Resource"},
+                        {alignment: "right", name: "Total"},
+                        {alignment: "right", name: "Free"},
+                        {alignment: "right", name: "Used"},
+                    ]
+                })
+                resource_table.addRow({
+                    Resource: "CPU",
+                    Total: resource.total_cpu + " cores",
+                    Used: percent_cpu + " %",
+                    Free: resource.total_cpu - resource.used_cpu + " cores"
+                })
+                resource_table.addRow({
+                    Resource: "Memory",
+                    Total: resource.total_memory + " MB",
+                    Used: percent_memory + " %",
+                    Free: resource.total_memory - resource.used_memory + " MB"
+                })
+                resource_table.addRow({
+                    Resource: "Disk",
+                    Total: resource.total_disk + " GB",
+                    Used: percent_disk + " %",
+                    Free: resource.total_disk - resource.used_disk + " GB"
+                })
+                resource_table.printTable()
                 console.log();
                 console.log(chalk.blueBright("Project detail: "));
-                console.table(projects);
+                let project_table = new Table({
+                    columns: [
+                        {name: "id", title: "Project ID", alignment: "center"},
+                        {name: "name", },
+                        {name: "instances", },
+                        {name: "memory", },
+                        {name: "cores", },
+                        {name: "disk", }
+                    ]
+                })
+                projects.forEach(project => project_table.addRow(project));
+                project_table.printTable()
             }else {
                 console.error(rs.reason);
             }
@@ -80,14 +116,58 @@ module.exports.showDetailOfInstanceInProject = async ({id_project}) => {
                 const percent_memory = parseInt(project.usage_memory * 100 /project.total_memory)
                 const percent_disk = parseInt(project.usage_disk * 100 /project.total_disk)
                 const percent_instance = parseInt(project.usage_instance * 100 /project.total_instance)
-                console.log(chalk.blueBright("Project overview: "), project.name);
-                console.log(`${chalk.yellow("CPU     :")}` + `    Used ${percent_cpu}%          Free: ${project.total_cpu - project.usage_cpu} `)
-                console.log(`${chalk.red("Memory  :")}` + `    Used ${percent_memory}%          Free: ${project.total_memory - project.usage_memory} MB`)
-                console.log(`${chalk.yellow("Disk    :")}` + `    Used ${percent_disk}%          Free: ${project.total_disk - project.usage_disk} GB`)
-                console.log(`${chalk.red("Instance:")}` + `    Used ${percent_instance}%          Free: ${project.total_instance - project.usage_instance}`)
+                console.log(chalk.greenBright("Project overview: "), chalk.yellowBright(project.name));
+                let project_table = new Table({
+                    columns: [
+                        {alignment: "left", name: "Resource"},
+                        {alignment: "right", name: "Total"},
+                        {alignment: "right", name: "Free"},
+                        {alignment: "right", name: "Used"},
+                    ]
+                })
+
+                project_table.addRow({
+                    Resource: "CPU",
+                    Total: project.total_cpu + " cores",
+                    Used: percent_cpu + " %",
+                    Free: project.total_cpu - project.usage_cpu + " cores",
+
+                })
+                project_table.addRow({
+                    Resource: "Memory",
+                    Total: project.total_memory + " MB",
+                    Used: percent_memory + " %",
+                    Free: project.total_memory - project.usage_memory + " MB"
+                })
+                project_table.addRow({
+                    Resource: "Disk",
+                    Total: project.total_disk + " GB",
+                    Used: percent_disk + " %",
+                    Free: project.total_disk - project.usage_disk + " GB"
+                })
+                project_table.addRow({
+                    Resource: "Instance",
+                    Total: project.total_instance,
+                    Used: percent_instance + " %",
+                    Free: project.total_instance - project.usage_instance
+                })
+
+                project_table.printTable()
                 console.log();
                 console.log(chalk.blueBright("Instance detail: "));
-                console.table(instances);
+                let instance_table = new Table({
+                    columns: [
+                        {name: "id", title: "Instance ID", alignment: "center"},
+                        {name: "name", alignment: "left", title: "Name"},
+                        {name: "status", alignment: "left", title: "Status"},
+                        {name: "ip", alignment: "left", title: "Ip"},
+                        {name: "memory", alignment: "left", title: "Memory"},
+                        {name: "cores", alignment: "left", title: "Cores"},
+                        {name: "disk", alignment: "left", title: "Disk"}
+                    ]
+                })
+                instances.forEach(instance => instance_table.addRow(instance));
+                instance_table.printTable()
             }else {
                 console.error(rs.reason);
             }
