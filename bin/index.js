@@ -6,9 +6,9 @@ const project = require("./project");
 const options = yargs
 	.scriptName("resource-manager")
 	.usage('$0 <cmd> [args]')
-	.command("login -u [user_name] -p [password]", "Login.")
+	.command("login [user_name] [password]", "Login.")
 	.command("resource detail", "Show resource overview and projects detail.")
-	.command("project -i [id_project] detail", "Show project overview and instances detail.")
+	.command("project [id_project] detail", "Show project overview and instances detail.")
 	.option("u", {alias: "user_name", describe: "Username of openstack account", type: "string"})
 	.option("p", {alias: "password", describe: "Password of openstack account", type: "string"})
 	.option("i", {alias: "id_project", describe: "Project ID", type: "string"})
